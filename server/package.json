@@ -5,7 +5,7 @@
   "main": "src/server.js",
   "scripts": {
     "watch": "cross-env PORT=8000 nodemon src/server.js",
-    "test": "jest",
+    "test": "jest --detectOpenHandles",
     "test-watch": "jest --watch",
     "start": "cross-env PORT=8000 node src/server.js",
     "cluster": "pm2 start src/server.js -i max"
@@ -13,6 +13,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "jest": {
+    "testEnvironment": "node"
+  },
   "devDependencies": {
     "cross-env": "^7.0.3",
     "jest": "^28.1.3",
