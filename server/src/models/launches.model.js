@@ -6,18 +6,18 @@ const DEFAULT_FLIGHT_NUMBER = 100;
 
 const launches = new Map();
 
-let latestFlightNumber = 100;
+// let latestFlightNumber = 100;
 
-const demoLaunch = {
-  flightNumber: 100, // flight_number
-  mission: "Kepler Exploration X", // name
-  rocket: "Falcon Heavy", //rocket.name
-  launchDate: new Date("Decemeber 17, 2030"), // date_local
-  target: "Kepler-442 b", //not applicable
-  customer: ["ZTM", "NASA"], // payload.customers for each payload
-  upcoming: true, // upcoming
-  success: true, // success
-};
+// const demoLaunch = {
+//   flightNumber: 100, // flight_number
+//   mission: "Kepler Exploration X", // name
+//   rocket: "Falcon Heavy", //rocket.name
+//   launchDate: new Date("Decemeber 17, 2030"), // date_local
+//   target: "Kepler-442 b", //not applicable
+//   customer: ["ZTM", "NASA"], // payload.customers for each payload
+//   upcoming: true, // upcoming
+//   success: true, // success
+// };
 
 const SPACEX_API_URL = 'https://api.spacexdata.com/v4/launches/query';
 
@@ -121,10 +121,13 @@ async function getLatestFlightNumber() {
   return latestLaunch.flightNumber;
 }
 
-async function getAllLaunches() {
+async function getAllLaunches(skip, limit) {
   // return Array.from(launches.values());
   return await launchesDatabase
-    .find({}, { '_id': 0, '__v': 0 });
+    .find({}, { '_id': 0, '__v': 0 })
+    .sort({ flightNumber: 1 })
+    .skip(skip)
+    .limit(limit);
 }
 
 async function scheduleNewLaunch(launch) {
