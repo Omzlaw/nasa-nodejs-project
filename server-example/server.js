@@ -17,7 +17,7 @@ const config = {
 
 const AUTH_OPTIONS = {
     callbackURL: '/auth/google/callback',
-    clientId: config.CLIENT_ID,
+    clientID: config.CLIENT_ID,
     clientSecret: config.CLIENT_SECRET
 }
 
@@ -47,13 +47,22 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.get('/auth/google', (req, res) => {
+app.get('/auth/google',
+    passport.authenticate('google', {
+        scope: ['email']
+    })
+);
 
-});
-
-app.get('/auth/google/callback', (req, res) => {
-
-})
+app.get('/auth/google/callback',
+    passport.authenticate('google', {
+        failureRedirect: '/failure',
+        successRedirect: '/',
+        session: false
+    }),
+    (req, res) => {
+        console.log('Google callback');
+    }
+);
 
 app.get('/auth/logout', (req, res) => {
 
@@ -62,6 +71,10 @@ app.get('/auth/logout', (req, res) => {
 app.get('/secret', checkLoggedIn, (req, res) => {
     res.send('Your personal secret value is 34!');
 });
+
+app.get('/failure', (req, res) => {
+    return res.send('Failed to log in!');
+})
 
 https.createServer({
     cert: fs.readFileSync('cert.pem'),
